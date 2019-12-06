@@ -100,14 +100,14 @@ with open(Migration_File,'r') as stream:
         SC = []
         source_subnet_C1 = []
         source_subnet_C2 = []
-        for x in range(0,source_cloud[0],1):
-            test = yaml_content['VM_Migration'][x]['source_cloud']
-        #    print(test)
+        for x in yaml_content['VM_Migration']:
+            test = x['source_cloud']
+            print(test)
             if test == "C1":
-                test1 = yaml_content['VM_Migration'][x]['source_subnet']
+                test1 = x['source_subnet']
                 source_subnet_C1.append(test1)
             else:
-                test1 = yaml_content['VM_Migration'][x]['source_subnet']
+                test1 = x['source_subnet']
                 source_subnet_C2.append(test1)
         
 #        print(source_subnet_C1)
@@ -115,9 +115,9 @@ with open(Migration_File,'r') as stream:
        
         VM_Mig_FC1 = []
         VM_Mig_FC2 = []
-        for x in range(0,source_cloud[0],1):
-            VM = yaml_content['VM_Migration'][x]['VM']
-            if yaml_content['VM_Migration'][x]['source_cloud'] == "C1":
+        for x in yaml_content['VM_Migration']:
+            VM = x['VM']
+            if x['source_cloud'] == "C1":
                 for vm in VM:
                     vm_name = vm["name"]
                     #print (vm_name)
@@ -167,22 +167,22 @@ with open(Migration_File,'r') as stream:
         
 
         # Checking whether the subnet is present in the remote host where the instance needs to be migrated
-        for x in range(0,source_cloud[0],1):
-            test = yaml_content['VM_Migration'][x]['source_cloud']
+        for x in yaml_content['VM_Migration']:
+            test = x['source_cloud']
             print(test)
             if test == "C1":
-                x = yaml_content['VM_Migration'][x]['source_subnet']
-                if x in source_subnet_C2:
-                    logging.info(' ' + str(datetime.datetime.now().time()) + ' ' + "The subnet " + x + " is present in destination cloud")
+                y = x['source_subnet']
+                if y in source_subnet_C2:
+                    logging.info(' ' + str(datetime.datetime.now().time()) + ' ' + "The subnet " + y + " is present in destination cloud")
                 else:
-                    logging.error(' ' + str(datetime.datetime.now().time()) + ' ' + "The subnet " + x + " is not present in the destination cloud")
+                    logging.error(' ' + str(datetime.datetime.now().time()) + ' ' + "The subnet " + y + " is not present in the destination cloud")
             if test == "C2":
                 #for x in source_subnet_C2:
-                x = yaml_content['VM_Migration'][x]['source_subnet']
-                if x in source_subnet_C1:
-                    logging.info(' ' + str(datetime.datetime.now().time()) + ' ' + "The subnet " + x + " is present in destination cloud")
+                z = x['source_subnet']
+                if z in source_subnet_C1:
+                    logging.info(' ' + str(datetime.datetime.now().time()) + ' ' + "The subnet " + z + " is present in destination cloud")
                 else:
-                    logging.error(' ' + str(datetime.datetime.now().time()) + ' ' + "The subnet " + x + " is not present in the destination cloud")
+                    logging.error(' ' + str(datetime.datetime.now().time()) + ' ' + "The subnet " + z + " is not present in the destination cloud")
 
 
     except yaml.YAMLError as exc:
