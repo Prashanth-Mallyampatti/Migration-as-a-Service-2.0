@@ -60,6 +60,7 @@ for event in notifier_mig.event_gen():
              # Set 1 in is_migration_in_progress file so that self healing 
              # does not implement and affect migration tasks
              f = open("/root/Migration-as-a-Service-2.0/etc/migrating.txt", "w")
+             f.seek(0)
              f.write("1")
              #f.close()
  
@@ -133,18 +134,18 @@ for event in notifier_mig.event_gen():
 #                    if log_enable:
 #                       logging.error(' ' + str(datetime.datetime.now().time()) + ' ' + 'FAILED to create migration infrastructure routes for tenant ' + str(name[0]))
              # Create infrastructure on cloud 1
-             if continue_flag:
-                if os.path.exists("/root/Migration-as-a-Service-2.0/etc/" + str(dir_name[0]) + "/" + str(dir_name[0]) + "C1.yml"):
-                  exit_status = os.system("ansible-playbook " + str(MIG_ANSIBLE) + "copy_container_C1.yml -i " + str(MIG_ANSIBLE) + "inventory --extra-vars 'tenant_name=" + str(dir_name[0]) + "' -v >> " + str(MIG_LOG))
-                  if exit_status!= 0:
-                    continue_flag = False
-                    if log_enable:
-                       logging.error(' ' + str(datetime.datetime.now().time()) + ' ' + 'FAILED to migrate for tenant ' + str(dir_name[0]))
-             
-             # Create infrastructure on cloud 2
+#             if continue_flag:
+#                if os.path.exists("/root/Migration-as-a-Service-2.0/etc/" + str(dir_name[0]) + "/" + str(dir_name[0]) + "C1.yml"):
+#                  exit_status = os.system("ansible-playbook " + str(MIG_ANSIBLE) + "copy_container_C1.yml -i " + str(MIG_ANSIBLE) + "inventory --extra-vars 'tenant_name=" + str(dir_name[0]) + "' -v >> " + str(MIG_LOG))
+#                  if exit_status!= 0:
+#                    continue_flag = False
+#                    if log_enable:
+#                       logging.error(' ' + str(datetime.datetime.now().time()) + ' ' + 'FAILED to migrate for tenant ' + str(dir_name[0]))
+#             
+#             # Create infrastructure on cloud 2
 #             if continue_flag:
 #                if os.path.exists("/root/Migration-as-a-Service/etc/" + str(dir_name[0]) + "/" + str(dir_name[0]) + "C2.yml"):
-#                  exit_status = os.system("ansible-playbook " + str(MIG_ANSIBLE) + "copy_vm_C2.yml -i " + str(MIG_ANSIBLE) + "inventory --extra-vars 'tenant_name=" + str(dir_name[0]) + "' -v >> " + str(MIG_LOG))
+#                  exit_status = os.system("ansible-playbook " + str(MIG_ANSIBLE) + "copy_container_C2.yml -i " + str(MIG_ANSIBLE) + "inventory --extra-vars 'tenant_name=" + str(dir_name[0]) + "' -v >> " + str(MIG_LOG))
 #                  if exit_status!= 0:
 #                    continue_flag = False
 #                    if log_enable:
@@ -153,6 +154,8 @@ for event in notifier_mig.event_gen():
              if log_enable:
                 logging.info(' ' + str(datetime.datetime.now().time()) + ' ' + 'SUCCESSFULLY migrated for tenant ' + str(dir_name[0]))
 
+             f.seek(0)
+             f.write("0")
              f.close()
        
         if 'IN_MODIFY' in event[1]:

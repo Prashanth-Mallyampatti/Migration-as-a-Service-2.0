@@ -12,35 +12,15 @@
     - /root/Migration-as-a-Service-2.0/etc/{{ tenant_name }}/{{ tenant_name }}C1.yml
   
   tasks:
-  - name: Stop container
+  - name: Docker Commit and Save
     shell: |
-      docker stop "{{ item.1.name }}"
-    with_subelements:
-      - "{{ Migrate }}"
-      - VM
-  
-  - name: Docker Commit
-    shell: |
-      docker save -o "{{ item.1.name }}".tar $(docker commit "{{ item.1.name }}" | awk -F":" '{ print $2 }')
+      docker save -o '/root/{{ item.1.name }}.tar' $(docker commit "{{ item.1.name }}" | awk -F":" '{ print $2 }')
     register: container_id
     with_subelements:
       - "{{ Migrate }}"
       - VM
 
-#  - name: Docker Save
-#    command: docker save -o "{{ item.1.name }}".tar "{{ container_id.stdout }}"
-#    with_subelements:
-#      - "{{ Migrate }}"
-#      - VM
-
-  - name: Ship image
-    shell: |
-      scp "{{ item.1.name }}".tar root@99.99.99.2:/root
-    with_subelements:
-      - "{{ Migrate }}"
-      - VM
-
-
+# ************** Worker Tasks **************** #
 - hosts: worker
   gather_facts: False
   vars:
@@ -52,40 +32,28 @@
     - /root/Migration-as-a-Service-2.0/etc/{{ tenant_name }}/{{ tenant_name }}C1.yml
   
   tasks:
-  - name: Docker Load
+  - name: Migrate Containers
+    copy:
+      src: '/root/{{ item.1.name }}.tar'
+      dest: '/root'
+      force: no
+    register: result
+    until: result is not failed
+    retries: 3
+    with_subelements:
+      - "{{ Migrate }}"
+      - VM
+
+  - name: Docker Create and Load
     shell: | 
-      docker create --name "{{ item.1.name }}" -i -t --privileged --mac-address "{{ item.1.vm_mac }}" $(docker load -i "{{ item.1.name }}".tar | awk -F":" '{print $3}')
-    ignore_errors: yes
+      docker inspect -f '\{\{ .State.Status \}\}' "{{ item.1.name }}" ; if [ $? -ne 0 ] ; then docker create --name "{{ item.1.name }}" -i -t --privileged $(docker load -i '/root/{{ item.1.name }}.tar' | awk -F":" '{print $3}') ; fi
     with_subelements:
      - "{{ Migrate }}"
      - VM
 
-#  - name: Docker create
-#    shell: |
-#      docker create --name "{{ item.1.name }}" -i -t --privileged --mac-address "{{ item.1.vm_mac }}" "{{ item.1.name }}"
-#    with_subelements:
-#     - "{{ Migrate }}"
-#     - VM
-#
   - name: Start Container
     shell: |
       docker start "{{ item.1.name }}"
     with_subelements:
       - "{{ Migrate }}"
       - VM
-  
-  - name: Create VETH Pairs
-    shell: |
-      ip link add "{{ item.1.brif_m }}" type veth peer name "{{ item.1.vmif_m }}"
-    ignore_errors: yes
-    with_subelements:
-      - "{{ Migrate }}"
-      - VM
-  
-  
-#  - name: Attach Interfaces
-#    shell: |
-#      ip link set dev "{{  }}" netns "{{ item.1.pid }}"
-#    with_subelements:
-#      - "{{ Migrate }}"
-#      - VM

@@ -1,9 +1,0 @@
-Migrate:
-- VM:
-  - brif_m: t9br1if1_m
-    name: t9_c1
-    vm_mac: 52:54:00:18:1b:fe
-    vmif: t9c1if1
-    vmif_m: t9c1if1_m
-  bridge_name: t2br1
-  ns_name: t2ns1

@@ -41,6 +41,7 @@ file_exists=os.path.exists("/root/Migration-as-a-Service-2.0/etc/migrating.txt")
 if not file_exists:
   os.system("touch /root/Migration-as-a-Service-2.0/etc/migrating.txt")
 f = open("/root/Migration-as-a-Service-2.0/etc/migrating.txt", "w")
+f.seek(0)
 f.write("0")
 f.close()
 

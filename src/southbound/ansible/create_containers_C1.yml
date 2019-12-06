@@ -19,7 +19,7 @@
     docker_container:
       name: "{{ item.name }}"
       image: centos7:latest
-      hostname: test
+      hostname: "{{ item.name }}"
       privileged: yes
       interactive: yes
       tty: yes

@@ -1,7 +1,7 @@
 Namespace:
 - default_route_ip: 192.168.3.1
   name: t3
-  pid: '18329'
+  pid: '6191'
   pns_if: t3pns_if
   pns_ip: 192.168.3.1/24
   tenant_if: t3if
@@ -17,7 +17,7 @@ Subnet:
     dnsif_ip: 1.1.1.1/24
     net_mask: 255.255.255.0
   ns_name: t3ns1
-  pid: '18941'
+  pid: '6731'
   route: &id002
   - if: p1
     ip: 10.1.21.1/24
@@ -28,18 +28,18 @@ Subnet:
   - tenant_ns_if: t3ns1if
     tenant_ns_ip: 10.1.21.1/24
     tenant_ns_name: t3
-    tenant_ns_pid: '18329'
+    tenant_ns_pid: '6191'
     tenant_sub_if: t3s1if
     tenant_sub_ip: 10.1.21.2/24
   vms: &id004
   - brif: t3br1if1
-    name: t3_C1
-    vm_pid: ''
-    vmif: t3C1if1
+    name: t3_c1
+    vm_pid: '16736'
+    vmif: t3c1if1
   - brif: t3br1if2
-    name: t3_C2
-    vm_pid: ''
-    vmif: t3C2if1
+    name: t3_c2
+    vm_pid: '17378'
+    vmif: t3c2if1
   vxlan: &id005
   - dev: t3s1if
     dsport: 4789
@@ -55,7 +55,7 @@ default_route_ip: 10.1.21.1
 dns: *id001
 name: t3
 ns_name: t3ns1
-pid: '18941'
+pid: '6731'
 pns_if: t3pns_if
 pns_ip: 192.168.3.1/24
 route: *id002
