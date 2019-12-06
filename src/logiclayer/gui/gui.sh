@@ -14,5 +14,5 @@ while [ 1 ]; do
 	git commit -m "Adding tenant files"
 	git push origin master
 
-	sleep 5
+	sleep 100
 done
