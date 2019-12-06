@@ -20,10 +20,10 @@ RUN \
     yum -y update && \
     yum -y install initscripts && \
     yum -y install curl git vim vim-enhanced wget man python unzip tar openssh-server* open-ssh-client* && \
-    yum -y install tcpdump bridge-utils dnsmasq && \
+    yum -y install tcpdump bridge-utils dnsmasq dhclient && \
     yum clean expire-cache && \
     yum -y clean all
-
+    
 RUN service sshd restart
 
 VOLUME [ "/sys/fs/cgroup" ]
