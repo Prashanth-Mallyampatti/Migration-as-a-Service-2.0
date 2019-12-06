@@ -58,30 +58,30 @@ let SelectField = function(options, dispName){
 
 let VM=function(){
   let name;
-  let disk;
-  let mem;
-  let vcpu;
-  let internet_access;
+  //let disk;
+  //let mem;
+  //let vcpu;
+  //let internet_access;
   // also contains a div property
 };
 VM.prototype.buildTemplate = function(){
   let heading = document.createElement('h3');
   let nameField = new InputField(this.name, 'name');
-  let diskField = new InputField(this.disk, 'disk');
-  let memField = new InputField(this.mem, 'mem');
-  let vcpuField = new InputField(this.vcpu, 'vcpu');
+  //let diskField = new InputField(this.disk, 'disk');
+  //let memField = new InputField(this.mem, 'mem');
+  //let vcpuField = new InputField(this.vcpu, 'vcpu');
   let selectField = new SelectField([{val:true, html: "true"},{val:false, html:"false"}],'internet_access');
   let div = document.createElement('div');
   $(div).addClass("vmDiv");
-  $(heading).html("VM").appendTo($(div));
+  $(heading).html("Container").appendTo($(div));
   $(nameField.div).appendTo($(div));
-  $(diskField.div).appendTo($(div));
-  $(memField.div).appendTo($(div));
-  $(vcpuField.div).appendTo($(div));
-  $(selectField.div).appendTo($(div));
+  //$(diskField.div).appendTo($(div));
+  //$(memField.div).appendTo($(div));
+  //$(vcpuField.div).appendTo($(div));
+  //$(selectField.div).appendTo($(div));
   let removeButton = document.createElement('button');
   
-  $(removeButton).html("Remove VM").appendTo($(div)).on('click',function(){
+  $(removeButton).html("Remove Container").appendTo($(div)).on('click',function(){
    if(confirm("Are your sure?")){
       $(div).remove();
    }
@@ -111,7 +111,7 @@ Subnet.prototype.buildTemplate = function(){
   let self = this;
   $(addVMButton).addClass("addVM").on("click",function(){
     self.addVM();
-  }).html("Add VM").appendTo($(this.div));
+  }).html("Add Container").appendTo($(this.div));
   
   let removeButton = document.createElement('button');
   $(removeButton).html("Remove Subnet").appendTo($(this.div)).on('click',function(){

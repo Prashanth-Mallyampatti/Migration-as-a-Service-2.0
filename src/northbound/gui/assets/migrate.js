@@ -46,11 +46,11 @@ let InputField = function(text, name){
     let nameField = new InputField(this.name, 'name');
     let div = document.createElement('div');
     $(div).addClass("vmDiv");
-    $(heading).html("VM").appendTo($(div));
+    $(heading).html("Container").appendTo($(div));
     $(nameField.div).appendTo($(div));
     let removeButton = document.createElement('button');
     
-    $(removeButton).html("Remove VM").appendTo($(div)).on('click',function(){
+    $(removeButton).html("Remove Container").appendTo($(div)).on('click',function(){
      if(confirm("Are your sure?")){
         $(div).remove();
      }
@@ -91,7 +91,7 @@ let InputField = function(text, name){
     let self = this;
     $(addVMButton).addClass("addVM").on("click",function(){
       self.addVM();
-    }).html("Add VM").appendTo($(this.div));
+    }).html("Add Container").appendTo($(this.div));
     
     let removeButton = document.createElement('button');
     $(removeButton).html("Remove Migration").appendTo($(this.div)).on('click',function(){
