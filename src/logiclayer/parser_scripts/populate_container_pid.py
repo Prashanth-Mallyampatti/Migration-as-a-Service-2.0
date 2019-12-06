@@ -73,7 +73,35 @@ for sub in yaml_content["Subnet"]:
       fpath = "/var/run/netns/" + str(s1_pid)
       if not path.exists(fpath):
         os.system("ln -s /proc/" + str(s1_pid) + "/ns/net /var/run/netns/" + str(s1_pid))
-
+  
+    for vm_no, VM in enumerate(sub["vms"]):
+      print(VM["name"])
+      if cloud == "c2":
+        print("In paramiko")
+        ssh=paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(ip,port,username,password)
+        
+        cmd2 = "docker inspect -f '{{.State.Pid}}' " + str(VM["name"])
+        stdin,stdout,stderr=ssh.exec_command(cmd2)
+        outlines2=stdout.readlines()
+        con_pid=''.join(outlines2).rstrip()
+        cmd3 = "ln -s /proc/" + str(con_pid) + "/ns/net /var/run/netns/" + str(con_pid)
+        stdin,stdout,stderr=ssh.exec_command(cmd3)
+        outlines3=stdout.readlines()
+        con_out=''.join(outlines3).rstrip()
+        print ("Con PID: ", con_pid)
+      
+      else:
+        con_pid = subprocess.Popen("docker inspect -f '{{.State.Pid}}' " + str(VM["name"]), shell=True, stdout=subprocess.PIPE, universal_newlines=True).communicate()[0].rstrip()
+        print ("Con PID:", con_pid)
+       
+      vm_pid = {}
+      tenant_vm_pid = {}
+      vm_pid = {'vm_pid': con_pid}
+      VM.update(vm_pid)
+      print(VM)
+    
     pid = {}
     tenant_pid = {}
     pid = {'pid': s1_pid}

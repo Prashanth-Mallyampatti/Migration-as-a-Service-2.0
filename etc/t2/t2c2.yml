@@ -1,0 +1,102 @@
+Namespace:
+- default_route_ip: 192.168.130.1
+  name: t2
+  pid: '3124'
+  pns_if: t2pns_if
+  pns_ip: 192.168.130.1/24
+  tenant_if: t2if
+  tenant_ip: 192.168.130.2/24
+Subnet:
+- bridge_name: t2br1
+  default_route_ip: 10.2.11.1
+  dns:
+  - brif: t2s1_dnsbrif
+    dhcp_end: 1.1.1.254
+    dhcp_start: 1.1.1.5
+    dnsif: t2s1_dnsif
+    dnsif_ip: 1.1.1.1/24
+    net_mask: 255.255.255.0
+  ns_name: t2ns1
+  pid: '3751'
+  route:
+  - if: p1
+    ip: 10.2.11.1/24
+    ns_if: t2if
+    ns_name: t2
+  subnet_ip: 1.1.1.0/24
+  tenant_ns:
+  - tenant_ns_if: t2ns1if
+    tenant_ns_ip: 10.2.11.1/24
+    tenant_ns_name: t2
+    tenant_ns_pid: '3124'
+    tenant_sub_if: t2s1if
+    tenant_sub_ip: 10.2.11.2/24
+  vms:
+  - brif: t2br1if1
+    name: t2_C3
+    vm_pid: ''
+    vmif: t2C3if1
+  vxlan:
+  - dev: t2s1if
+    dsport: 4789
+    id: 42
+    local_ip: 10.2.11.2
+    remote_ip: 10.1.11.2
+    remote_route: 10.1.11.0/24
+    subnet_route: 10.2.11.0/24
+    tenant_route_ip: 192.168.130.2
+    v_name: vxlan_t2s1
+- bridge_name: t2br2
+  default_route_ip: 10.2.12.1
+  dns: &id001
+  - brif: t2s2_dnsbrif
+    dhcp_end: 2.2.2.254
+    dhcp_start: 2.2.2.5
+    dnsif: t2s2_dnsif
+    dnsif_ip: 2.2.2.1/24
+    net_mask: 255.255.255.0
+  ns_name: t2ns2
+  pid: '4994'
+  route: &id002
+  - if: p1
+    ip: 10.2.12.1/24
+    ns_if: t2if
+    ns_name: t2
+  subnet_ip: 2.2.2.0/24
+  tenant_ns: &id003
+  - tenant_ns_if: t2ns2if
+    tenant_ns_ip: 10.2.12.1/24
+    tenant_ns_name: t2
+    tenant_ns_pid: '3124'
+    tenant_sub_if: t2s2if
+    tenant_sub_ip: 10.2.12.2/24
+  vms: &id004
+  - brif: t2br2if1
+    name: t2_C4
+    vm_pid: ''
+    vmif: t2C4if1
+  vxlan: &id005
+  - dev: []
+    dsport: []
+    id: []
+    local_ip: []
+    remote_ip: []
+    remote_route: []
+    subnet_route: []
+    tenant_route_ip: []
+    v_name: []
+bridge_name: t2br2
+default_route_ip: 10.2.12.1
+dns: *id001
+name: t2
+ns_name: t2ns2
+pid: '4994'
+pns_if: t2pns_if
+pns_ip: 192.168.130.1/24
+route: *id002
+subnet_ip: 2.2.2.0/24
+tenant_if: t2if
+tenant_ip: 192.168.130.2/24
+tenant_ns: *id003
+vms: *id004
+vxlan: *id005

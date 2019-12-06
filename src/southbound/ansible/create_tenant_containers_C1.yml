@@ -6,8 +6,8 @@
     ansible_python_interpreter: /usr/bin/python2
     disk_dir: /var/lib/libvirt/images
   vars_files:
-    - /root/Migration-as-a-Service/src/northbound/config_files/infrastructure/{{ tenant_name }}.yml
-    - /root/Migration-as-a-Service/etc/{{ tenant_name }}/{{ tenant_name }}c1.yml
+    - /root/Migration-as-a-Service-2.0/src/northbound/config_files/infrastructure/{{ tenant_name }}.yml
+    - /root/Migration-as-a-Service-2.0/etc/{{ tenant_name }}/{{ tenant_name }}c1.yml
 
   tasks:
   - name: Build Docker Image
@@ -26,21 +26,42 @@
       privileged: yes
       interactive: yes
       tty: yes
-    with_items:
+    with_subelements:
       - "{{ Subnet }}"
       - vms
 
-#  - name: Attach VM interface
-#    shell: |
-#      virsh domiflist "{{ item.1.name }}" | grep -w '{{ item.1.vmif }}' ; if [ $? -ne 0 ] ; then virsh attach-interface "{{ item.1.name }}" direct "{{ item.1.vmif }}" --live --persistent ; fi
-#    when: 
-#      - item.1.brif != []
-#      - item.1.disk != []
-#      - item.1.mem != []
-#      - item.1.name != []
-#      - item.1.vcpu != []
-#      - item.1.vmif != []
-#    with_subelements:
-#      - "{{ Subnet }}"
-#      - vms
-#
+  - name: Attach Container interface
+    shell: |
+      docker exec "{{ item.1.name }}" ip link show "{{ item.1.vmif }}" ; if [ $? -ne 0 ] ; then ip link set "{{ item.1.vmif }}" netns "{{ item.1.vm_pid }}" ; fi
+    when: 
+      - item.1.brif != []
+      - item.1.name != "JOKER"
+      - item.1.vmif != []
+      - item.1.vm_pid != []
+    with_subelements:
+      - "{{ Subnet }}"
+      - vms
+
+  - name: Make the container interface up
+    shell: |
+      docker exec "{{ item.1.name }}" ip link set dev "{{ item.1.vmif }}" up
+    when: 
+      - item.1.brif != []
+      - item.1.name != "JOKER"
+      - item.1.vmif != []
+      - item.1.vm_pid != []
+    with_subelements:
+      - "{{ Subnet }}"
+      - vms
+
+  - name: Run DHCLIENT
+    shell: |
+      docker exec "{{ item.1.name }}" dhclient "{{ item.1.vmif }}"
+    when: 
+      - item.1.brif != []
+      - item.1.name != "JOKER"
+      - item.1.vmif != []
+      - item.1.vm_pid != []
+    with_subelements:
+      - "{{ Subnet }}"
+      - vms

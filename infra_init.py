@@ -148,29 +148,29 @@ for event in notifier_infra.event_gen():
                   if log_enable:
                      logging.error(' ' + str(datetime.datetime.now().time()) + ' ' + 'FAILED to create infrastructure for tenant' + str(dir_name[0]))
 
-#             # Create VMs in cloud 1
-#             if continue_flag:
-#                exit_status = os.system("ansible-playbook " + str(MIG_ANSIBLE) + "create_vm_C1.yml -i " + str(MIG_ANSIBLE) + "inventory --extra-vars 'tenant_name=" + str(dir_name[0]) + "' -v >> " + str(MIG_INFRA_LOG))
-#                if exit_status != 0:
-#                  continue_flag = False
-#                  if log_enable:
-#                     logging.error(' ' + str(datetime.datetime.now().time()) + ' ' + 'FAILED to create infrastructure for tenant ' + str(dir_name[0]))
-#
-#             # Create VMs in cloud 2
-#             if continue_flag:
-#                exit_status = os.system("ansible-playbook " + str(MIG_ANSIBLE) + "create_vm_C2.yml -i " +  str(MIG_ANSIBLE) + "inventory --extra-vars 'tenant_name=" + str(dir_name[0]) + "' -v >> " + str(MIG_INFRA_LOG))
-#                if exit_status != 0:
-#                  continue_flag = False
-#                  if log_enable:
-#                      logging.error(' ' + str(datetime.datetime.now().time()) + ' ' + 'FAILED to create infrastructure for tenant ' + str(dir_name[0]))
-#
-#             if continue_flag:
-#                if log_enable:
-#                    logging.info(' ' + str(datetime.datetime.now().time()) + ' ' + 'SUCCESSFULLY completed creating the required infrastructure for tenant ' + str(dir_name[0]))
-#             else:
-#                if log_enable:
-#                    logging.error(' ' + str(datetime.datetime.now().time()) + ' ' + 'FAILED to create infrastructure for tenant ' + str(dir_name[0]))
-#  
+             # Create VMs in cloud 1
+             if continue_flag:
+                exit_status = os.system("ansible-playbook " + str(MIG_ANSIBLE) + "create_tenant_containers_C1.yml -i " + str(MIG_ANSIBLE) + "inventory --extra-vars 'tenant_name=" + str(dir_name[0]) + "' -v >> " + str(MIG_INFRA_LOG))
+                if exit_status != 0:
+                  continue_flag = False
+                  if log_enable:
+                     logging.error(' ' + str(datetime.datetime.now().time()) + ' ' + 'FAILED to create infrastructure for tenant ' + str(dir_name[0]))
+
+             # Create VMs in cloud 2
+             if continue_flag:
+                exit_status = os.system("ansible-playbook " + str(MIG_ANSIBLE) + "create_tenant_containers_C2.yml -i " +  str(MIG_ANSIBLE) + "inventory --extra-vars 'tenant_name=" + str(dir_name[0]) + "' -v >> " + str(MIG_INFRA_LOG))
+                if exit_status != 0:
+                  continue_flag = False
+                  if log_enable:
+                      logging.error(' ' + str(datetime.datetime.now().time()) + ' ' + 'FAILED to create infrastructure for tenant ' + str(dir_name[0]))
+
+             if continue_flag:
+                if log_enable:
+                    logging.info(' ' + str(datetime.datetime.now().time()) + ' ' + 'SUCCESSFULLY completed creating the required infrastructure for tenant ' + str(dir_name[0]))
+             else:
+                if log_enable:
+                    logging.error(' ' + str(datetime.datetime.now().time()) + ' ' + 'FAILED to create infrastructure for tenant ' + str(dir_name[0]))
+  
       
         ############# Modify infrastructure ##############
  
