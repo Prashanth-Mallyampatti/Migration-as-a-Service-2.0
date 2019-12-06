@@ -376,3 +376,12 @@ INFO:root: 01:54:13.059683 file 't11_mig.yml' created in '/root/Migration-as-a-S
 INFO:root: 01:54:13.065713 Created t11_mig directory for tenant t11_mig.yml
 INFO:root: 01:56:22.493595 SUCCESSFULLY migrated for tenant t11_mig
 INFO:root: 01:56:22.495497 file 't11_mig.yml' modified in '/root/Migration-as-a-Service-2.0/src/northbound/config_files/migration'
+INFO:root: 04:13:20.261995 file 't1.yml' created in '/root/Migration-as-a-Service-2.0/src/northbound/config_files/infrastructure'
+INFO:root: 04:13:20.271559 Created t1/VM_templates directory for tenant t1.yml
+ERROR:root: 04:23:02.429934 FAILED to create infrastructure for tenant t1
+ERROR:root: 04:23:02.431352 FAILED to create infrastructure for tenant t1
+INFO:root: 04:23:02.432026 file 't1.yml' modified in '/root/Migration-as-a-Service-2.0/src/northbound/config_files/infrastructure'
+INFO:root: 04:25:12.021073 file 't2.yml' created in '/root/Migration-as-a-Service-2.0/src/northbound/config_files/infrastructure'
+INFO:root: 04:25:12.028547 Created t2/VM_templates directory for tenant t2.yml
+INFO:root: 04:27:10.403806 SUCCESSFULLY completed creating the required infrastructure for tenant t2
+INFO:root: 04:27:10.405723 file 't2.yml' modified in '/root/Migration-as-a-Service-2.0/src/northbound/config_files/infrastructure'

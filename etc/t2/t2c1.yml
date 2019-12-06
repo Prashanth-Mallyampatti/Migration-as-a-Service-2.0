@@ -1,7 +1,7 @@
 Namespace:
 - default_route_ip: 192.168.2.1
   name: t2
-  pid: '9171'
+  pid: '11913'
   pns_if: t2pns_if
   pns_ip: 192.168.2.1/24
   tenant_if: t2if
@@ -17,7 +17,7 @@ Subnet:
     dnsif_ip: 1.1.1.1/24
     net_mask: 255.255.255.0
   ns_name: t2ns1
-  pid: '9803'
+  pid: '12677'
   route: &id002
   - if: p1
     ip: 10.1.11.1/24
@@ -28,17 +28,17 @@ Subnet:
   - tenant_ns_if: t2ns1if
     tenant_ns_ip: 10.1.11.1/24
     tenant_ns_name: t2
-    tenant_ns_pid: '9171'
+    tenant_ns_pid: '11913'
     tenant_sub_if: t2s1if
     tenant_sub_ip: 10.1.11.2/24
   vms: &id004
   - brif: t2br1if1
     name: t2_c1
-    vm_pid: '18791'
+    vm_pid: '21589'
     vmif: t2c1if1
   - brif: t2br1if2
     name: t2_c2
-    vm_pid: '19572'
+    vm_pid: '22234'
     vmif: t2c2if1
   vxlan: &id005
   - dev: t2s1if
@@ -55,7 +55,7 @@ default_route_ip: 10.1.11.1
 dns: *id001
 name: t2
 ns_name: t2ns1
-pid: '9803'
+pid: '12677'
 pns_if: t2pns_if
 pns_ip: 192.168.2.1/24
 route: *id002
