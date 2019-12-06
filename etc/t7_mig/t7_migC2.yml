@@ -1,0 +1,11 @@
+Migrate:
+- VM:
+  - brif_m: t7br1if1_m
+    con_pid: '10040'
+    name: t7_c3
+    vm_mac: a2:03:d0:10:cc:2a
+    vmif: t7c3if1
+    vmif_m: t7c3if1_m
+  bridge_name: t7br1
+  ns_name: t7ns1
+  ns_pid: '338'

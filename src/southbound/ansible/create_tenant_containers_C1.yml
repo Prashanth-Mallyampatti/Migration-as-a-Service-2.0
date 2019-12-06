@@ -35,4 +35,4 @@
       python3 /root/Migration-as-a-Service-2.0/src/logiclayer/parser_scripts/populate_container_pid.py "{{ tenant_name }}" "{{ tenant_name }}"c1.yml
   
   - pause:
-      seconds: 30
+      seconds: 5

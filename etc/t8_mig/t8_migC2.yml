@@ -1,0 +1,11 @@
+Migrate:
+- VM:
+  - brif_m: t8br1if1_m
+    con_pid: '25606'
+    name: t8_c3
+    vm_mac: 5e:fe:cc:3c:8b:e0
+    vmif: t8c3if1
+    vmif_m: t8c3if1_m
+  bridge_name: t8br1
+  ns_name: t8ns1
+  ns_pid: '5057'

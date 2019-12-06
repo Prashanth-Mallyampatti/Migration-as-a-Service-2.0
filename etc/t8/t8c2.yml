@@ -1,0 +1,102 @@
+Namespace:
+- default_route_ip: 192.168.136.1
+  name: t8
+  pid: '8456'
+  pns_if: t8pns_if
+  pns_ip: 192.168.136.1/24
+  tenant_if: t8if
+  tenant_ip: 192.168.136.2/24
+Subnet:
+- bridge_name: t8br1
+  default_route_ip: 10.2.71.1
+  dns:
+  - brif: t8s1_dnsbrif
+    dhcp_end: 1.1.1.254
+    dhcp_start: 1.1.1.5
+    dnsif: t8s1_dnsif
+    dnsif_ip: 1.1.1.1/24
+    net_mask: 255.255.255.0
+  ns_name: t8ns1
+  pid: '8967'
+  route:
+  - if: p1
+    ip: 10.2.71.1/24
+    ns_if: t8if
+    ns_name: t8
+  subnet_ip: 1.1.1.0/24
+  tenant_ns:
+  - tenant_ns_if: t8ns1if
+    tenant_ns_ip: 10.2.71.1/24
+    tenant_ns_name: t8
+    tenant_ns_pid: '8456'
+    tenant_sub_if: t8s1if
+    tenant_sub_ip: 10.2.71.2/24
+  vms:
+  - brif: t8br1if1
+    name: t8_c3
+    vm_pid: '25635'
+    vmif: t8c3if1
+  vxlan:
+  - dev: t8s1if
+    dsport: 4789
+    id: 42
+    local_ip: 10.2.71.2
+    remote_ip: 10.1.71.2
+    remote_route: 10.1.71.0/24
+    subnet_route: 10.2.71.0/24
+    tenant_route_ip: 192.168.136.2
+    v_name: vxlan_t8s1
+- bridge_name: t8br2
+  default_route_ip: 10.2.72.1
+  dns: &id001
+  - brif: t8s2_dnsbrif
+    dhcp_end: 2.2.2.254
+    dhcp_start: 2.2.2.5
+    dnsif: t8s2_dnsif
+    dnsif_ip: 2.2.2.1/24
+    net_mask: 255.255.255.0
+  ns_name: t8ns2
+  pid: '11575'
+  route: &id002
+  - if: p1
+    ip: 10.2.72.1/24
+    ns_if: t8if
+    ns_name: t8
+  subnet_ip: 2.2.2.0/24
+  tenant_ns: &id003
+  - tenant_ns_if: t8ns2if
+    tenant_ns_ip: 10.2.72.1/24
+    tenant_ns_name: t8
+    tenant_ns_pid: '8456'
+    tenant_sub_if: t8s2if
+    tenant_sub_ip: 10.2.72.2/24
+  vms: &id004
+  - brif: t8br2if1
+    name: t8_c4
+    vm_pid: '26163'
+    vmif: t8c4if1
+  vxlan: &id005
+  - dev: []
+    dsport: []
+    id: []
+    local_ip: []
+    remote_ip: []
+    remote_route: []
+    subnet_route: []
+    tenant_route_ip: []
+    v_name: []
+bridge_name: t8br2
+default_route_ip: 10.2.72.1
+dns: *id001
+name: t8
+ns_name: t8ns2
+pid: '11575'
+pns_if: t8pns_if
+pns_ip: 192.168.136.1/24
+route: *id002
+subnet_ip: 2.2.2.0/24
+tenant_if: t8if
+tenant_ip: 192.168.136.2/24
+tenant_ns: *id003
+vms: *id004
+vxlan: *id005
