@@ -5,9 +5,9 @@ VM_Migration:
     source_subnet: "1.1.1.0/24"
     destination_cloud: "C2"
   - VM:
-      - name: "c4"
+      - name: "c3"
     source_cloud: "C2"
-    source_subnet: "2.2.2.0/24"
+    source_subnet: "1.1.1.0/24"
     destination_cloud: "C1"
 MISC:
   - LOG_ENABLE: true

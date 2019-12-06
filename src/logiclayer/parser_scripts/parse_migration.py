@@ -57,6 +57,7 @@ class Create_YAML_FILE():
     for migrate in self.contents:
       source_cloud = migrate["source_cloud"]
       source_subnet = migrate["source_subnet"]
+
       if source_cloud == "C1":
         with open(C1_infra_file,'r') as stream:
           try:
@@ -75,9 +76,20 @@ class Create_YAML_FILE():
           infra_vms = infra["vms"]
           bridge_name = infra["bridge_name"]
 
+
           if subnet_ip == source_subnet:
             migrate_list["ns_name"] = ns_name
             migrate_list["bridge_name"] = bridge_name
+            cmd = "docker inspect --format '{{.State.Pid}}' " + ns_name 
+            ssh=paramiko.SSHClient()
+            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            ssh.connect(ip,port,username,password)
+            stdin,stdout,stderr=ssh.exec_command(cmd)
+            
+            outlines=stdout.readlines()
+            resp=''.join(outlines).rstrip()
+            print (resp)
+            migrate_list["ns_pid"] = resp
             VM = migrate["VM"]
             vm = []
             for vms in VM:
@@ -88,10 +100,18 @@ class Create_YAML_FILE():
                   vm_list["vmif"] = infra_vm["vmif"]
                   vm_list["vmif_m"] = infra_vm["vmif"] + "_m"
                   vm_list["brif_m"] = infra_vm["brif"] + "_m"
+                  
+                  cmd = "docker inspect --format '{{.State.Pid}}' " + infra_vm["name"]
+                  ssh=paramiko.SSHClient()
+                  ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+                  ssh.connect(ip,port,username,password)
+                  stdin,stdout,stderr=ssh.exec_command(cmd)
+                  
+                  outlines=stdout.readlines()
+                  resp=''.join(outlines).rstrip()
+                  print (resp)
+                  vm_list["con_pid"] = resp
           
-                  pid = subprocess.Popen("docker inspect --format '{{.State.Pid}}' " + vm_list["name"], shell=True, stdout=subprocess.PIPE, universal_newlines=True).communicate()[0].rstrip() 
-                  vm_list["pid"] = pid
-                  #cmd = "virsh domiflist " + vm_list["name"] + " | grep -w 'direct' |  awk '{ print $5 }'"
                   cmd = "docker exec " + vm_list["name"] + " ip link show " + vm_list["vmif"] + "| awk FNR==2'{ print $2 }'"
                   stream = os.popen(cmd)
                   out = stream.read()
@@ -101,6 +121,8 @@ class Create_YAML_FILE():
         self.subnets_C1.append(migrate_list)
         file_name = "/root/Migration-as-a-Service-2.0/etc/" + tenant_name1 + "/" + tenant_name1 + "C1.yml"
       #print(source_cloud) 
+        
+    
       logging.info(' ' + str(datetime.datetime.now().time()) + ' ' + 'source cloud is ' + str(source_cloud))
       if source_cloud == "C2":
         with open(C2_infra_file,'r') as stream:
@@ -120,9 +142,13 @@ class Create_YAML_FILE():
           infra_vms = infra["vms"]
           bridge_name = infra["bridge_name"]
 
+
           if subnet_ip == source_subnet:
             migrate_list["ns_name"] = ns_name
             migrate_list["bridge_name"] = bridge_name
+            pid = subprocess.Popen("docker inspect --format '{{.State.Pid}}' " + ns_name, shell=True, stdout=subprocess.PIPE, universal_newlines=True).communicate()[0].rstrip() 
+            print (pid)
+            migrate_list["ns_pid"] = pid
             VM = migrate["VM"]
             vm = []
             for vms in VM:
@@ -133,9 +159,11 @@ class Create_YAML_FILE():
                   vm_list["vmif"] = infra_vm["vmif"]
                   vm_list["vmif_m"] = infra_vm["vmif"] + "_m"
                   vm_list["brif_m"] = infra_vm["brif"] + "_m"
-                  pid = subprocess.Popen("docker inspect --format '{{.State.Pid}}' " + vm_list["name"], shell=True, stdout=subprocess.PIPE, universal_newlines=True).communicate()[0].rstrip() 
-                  vm_list["pid"] = pid
-                  #cmd="virsh domiflist " + vm_list["name"]  + " | grep -w 'direct' | awk '{ print $5 }'"
+            
+                  pid = subprocess.Popen("docker inspect --format '{{.State.Pid}}' " + infra_vm["name"], shell=True, stdout=subprocess.PIPE, universal_newlines=True).communicate()[0].rstrip() 
+                  print (pid)
+                  vm_list["con_pid"] = pid
+
                   cmd = "docker exec " + vm_list["name"] + " ip link show " + vm_list["vmif"] + "| awk FNR==2'{ print $2 }'"
                   ssh=paramiko.SSHClient()
                   ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -149,7 +177,7 @@ class Create_YAML_FILE():
         
         file_name = "/root/Migration-as-a-Service-2.0/etc/" + tenant_name1 + "/" + tenant_name1 + "C2.yml"
         self.subnets_C2.append(migrate_list)
-    
+
       self.dump_content(file_name, source_cloud)
     
   def dump_content(self, file_name, source_cloud):

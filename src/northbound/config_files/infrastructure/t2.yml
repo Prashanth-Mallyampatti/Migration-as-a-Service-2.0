@@ -4,12 +4,6 @@ C1:
   - name: c1
   - name: c2
   subnet_addr: 1.1.1.0/24
-- VM:
-  - disk: []
-    mem: []
-    name: []
-    vcpu: []
-  subnet_addr: 2.2.2.0/24
 C2:
 - VM:
   - name: c3
@@ -18,5 +12,5 @@ C2:
   - name: c4
   subnet_addr: 2.2.2.0/24
 MISC:
-- GUI: true
-  LOG_ENABLE: true
+- LOG_ENABLE: true
+  GUI: true
