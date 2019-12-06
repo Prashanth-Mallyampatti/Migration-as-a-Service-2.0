@@ -2242,3 +2242,9 @@ changed: [localhost] => (item=[{u'route': [{u'ip': u'10.1.51.1/24', u'ns_name': 
 PLAY RECAP **************************************************************************************************************************************************
 localhost                  : ok=21   changed=21   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 
+INFO:root: 22:06:45.985469 Printing the yaml input file
+INFO:root: 22:06:45.985666 {'C1': [{'CONTAINER': [{'name': 'C1'}, {'name': 'C2'}], 'subnet_addr': '1.1.1.0/24'}], 'C2': [{'CONTAINER': [{'name': 'C3'}], 'subnet_addr': '1.1.1.0/24'}, {'CONTAINER': [{'name': 'C4'}], 'subnet_addr': '2.2.2.0/24'}], 'MISC': [{'LOG_ENABLE': True, 'GUI': True}]}
+INFO:root: 22:06:45.985784 Provided subnet in C1: 1.1.1.0/24 is valid
+INFO:root: 22:06:45.985836 Provided subnet in C2: 1.1.1.0/24 is valid
+INFO:root: 22:06:45.985877 Provided subnet in C2: 2.2.2.0/24 is valid
+Using /etc/ansible/ansible.cfg as config file

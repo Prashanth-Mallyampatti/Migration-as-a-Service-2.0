@@ -6,8 +6,8 @@ import datetime
 
 arg = sys.argv
 #print(arg)
-yaml_file = '/root/Migration-as-a-Service/src/northbound/config_files/infrastructure/' + arg[1]
-mig_file = '/root/Migration-as-a-Service/src/northbound/config_files/migration' + arg[2]
+yaml_file = '/root/Migration-as-a-Service-2.0/src/northbound/config_files/infrastructure/' + arg[1]
+mig_file = '/root/Migration-as-a-Service-2.0/src/northbound/config_files/migration' + arg[2]
 #print("The details of subnets in the Tenant t1.yml")
 
 

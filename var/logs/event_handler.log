@@ -133,3 +133,7 @@ INFO:root: 20:19:38.871921 file 't5.yml' modified in '/root/Migration-as-a-Servi
 INFO:root: 20:44:42.050270 file 't6.yml' created in '/root/Migration-as-a-Service-2.0/src/northbound/config_files/infrastructure'
 INFO:root: 20:44:42.059650 Created t6/VM_templates directory for tenant t6.yml
 INFO:root: 20:52:44.118133 file 't6.yml' modified in '/root/Migration-as-a-Service-2.0/src/northbound/config_files/infrastructure'
+INFO:root: 22:06:45.914425 file 't2.yml' created in '/root/Migration-as-a-Service-2.0/src/northbound/config_files/infrastructure'
+INFO:root: 22:06:45.921207 Created t2/VM_templates directory for tenant t2.yml
+ERROR:root: 22:06:47.091069 FAILED to create infrastructure for tenant t2
+INFO:root: 22:06:47.091600 file 't2.yml' modified in '/root/Migration-as-a-Service-2.0/src/northbound/config_files/infrastructure'

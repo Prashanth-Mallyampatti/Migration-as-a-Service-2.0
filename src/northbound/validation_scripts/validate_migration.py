@@ -17,10 +17,10 @@ subnet = ""
 arg = sys.argv
 
 # Logging file
-logging.basicConfig(filename="/root/Migration-as-a-Service/var/logs/infrastructure.log", level=logging.INFO)
+logging.basicConfig(filename="/root/Migration-as-a-Service-2.0/var/logs/infrastructure.log", level=logging.INFO)
 
-Yaml_File = "/root/Migration-as-a-Service/src/northbound/config_files/infrastructure/" + arg[1]
-Migration_File = "/root/Migration-as-a-Service/src/northbound/config_files/migration/" + arg[2]
+Yaml_File = "/root/Migration-as-a-Service-2.0/src/northbound/config_files/infrastructure/" + arg[1]
+Migration_File = "/root/Migration-as-a-Service-2.0/src/northbound/config_files/migration/" + arg[2]
 #print(Yaml_File)
 
 with open(Yaml_File,'r') as stream:
