@@ -1,0 +1,44 @@
+---
+- hosts: worker
+  gather_facts: False
+  vars:
+    ansible_python_interpreter: /usr/bin/python2
+    disk_dir: /var/lib/libvirt/images
+  vars_files:
+    - /root/Migration-as-a-Service/src/northbound/config_files/infrastructure/{{ tenant_name }}.yml
+    - /root/Migration-as-a-Service/etc/{{ tenant_name }}/{{ tenant_name }}c2.yml
+
+  tasks:
+  - name: Build Docker Image
+    docker_image:
+      name: centos7
+      build:
+        path: ./
+      state: present
+      source: build
+
+  - name: Spawning Tenant Container
+    docker_container:
+      name: "{{ item.1.name }}"
+      image: centos7:latest
+      hostname: test
+      privileged: yes
+      interactive: yes
+      tty: yes
+    with_items:
+      - "{{ Subnet }}"
+      - vms
+
+#  - name: Attach VM interface
+#    shell: |
+#      virsh domiflist "{{ item.1.name }}" | grep -w '{{ item.1.vmif }}' ; if [ $? -ne 0 ] ; then virsh attach-interface "{{ item.1.name }}" direct "{{ item.1.vmif }}" --live --persistent ; fi
+#    when:
+#      - item.1.brif != []
+#      - item.1.disk != []
+#      - item.1.mem != []
+#      - item.1.name != []
+#      - item.1.vcpu != []
+#      - item.1.vmif != []
+#    with_subelements:
+#      - "{{ Subnet }}"
+#      - vms

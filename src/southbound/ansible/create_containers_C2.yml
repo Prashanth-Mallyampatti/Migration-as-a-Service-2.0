@@ -1,0 +1,38 @@
+---
+- hosts: worker
+  gather_facts: False
+
+  vars_files:
+    - /root/Migration-as-a-Service-2.0/src/northbound/config_files/infrastructure/{{ tenant_name }}.yml
+    - /root/Migration-as-a-Service-2.0/etc/{{ tenant_name }}/{{ tenant_name }}c2.yml
+
+  tasks:
+  - name: Build Docker Image
+    docker_image:
+      name: centos7
+      build:
+        path: /root
+      state: present
+      source: build
+
+  - name: Spawning Tenant Container
+    docker_container:
+      name: "{{ item.name }}"
+      image: centos7:latest
+      hostname: test
+      privileged: yes
+      interactive: yes
+      tty: yes
+    with_items:
+      - "{{ Namespace }}"
+
+  - name: Create Subnet Containers
+    docker_container:
+      name: "{{ item.ns_name }}"
+      image: centos7:latest
+      hostname: "{{ item.ns_name }}"
+      privileged: yes
+      interactive: yes
+      tty: yes
+    with_items:
+      - "{{ Subnet }}"
