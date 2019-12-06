@@ -88,7 +88,7 @@ class Create_YAML_FILE():
             
             outlines=stdout.readlines()
             resp=''.join(outlines).rstrip()
-            print (resp)
+            print ("C1:", resp)
             migrate_list["ns_pid"] = resp
             VM = migrate["VM"]
             vm = []
@@ -109,7 +109,7 @@ class Create_YAML_FILE():
                   
                   outlines=stdout.readlines()
                   resp=''.join(outlines).rstrip()
-                  print (resp)
+                  print ("C1:", resp)
                   vm_list["con_pid"] = resp
           
                   cmd = "docker exec " + vm_list["name"] + " ip link show " + vm_list["vmif"] + "| awk FNR==2'{ print $2 }'"
@@ -146,8 +146,16 @@ class Create_YAML_FILE():
           if subnet_ip == source_subnet:
             migrate_list["ns_name"] = ns_name
             migrate_list["bridge_name"] = bridge_name
+            
+            #cmd = "docker inspect --format '{{.State.Pid}}' " + ns_name
+            #ssh=paramiko.SSHClient()
+            #ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            #ssh.connect(ip,port,username,password)
+            #stdin,stdout,stderr=ssh.exec_command(cmd)
+            #outlines=stdout.readlines()
+            #pid=''.join(outlines).rstrip()
+            #print ("C2: ", pid)
             pid = subprocess.Popen("docker inspect --format '{{.State.Pid}}' " + ns_name, shell=True, stdout=subprocess.PIPE, universal_newlines=True).communicate()[0].rstrip() 
-            print (pid)
             migrate_list["ns_pid"] = pid
             VM = migrate["VM"]
             vm = []
@@ -161,7 +169,15 @@ class Create_YAML_FILE():
                   vm_list["brif_m"] = infra_vm["brif"] + "_m"
             
                   pid = subprocess.Popen("docker inspect --format '{{.State.Pid}}' " + infra_vm["name"], shell=True, stdout=subprocess.PIPE, universal_newlines=True).communicate()[0].rstrip() 
-                  print (pid)
+                  
+                 # cmd = "docker inspect --format '{{.State.Pid}}' " + infra_vm["name"]
+                 # ssh=paramiko.SSHClient()
+                 # ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+                 # ssh.connect(ip,port,username,password)
+                 # stdin,stdout,stderr=ssh.exec_command(cmd)
+                 # outlines=stdout.readlines()
+                 # pid=''.join(outlines).rstrip()
+                  print ("C2: ", pid)
                   vm_list["con_pid"] = pid
 
                   cmd = "docker exec " + vm_list["name"] + " ip link show " + vm_list["vmif"] + "| awk FNR==2'{ print $2 }'"

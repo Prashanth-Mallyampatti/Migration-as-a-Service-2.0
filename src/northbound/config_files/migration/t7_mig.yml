@@ -1,0 +1,9 @@
+VM_Migration:
+  - VM:
+      - name: "c3"
+    source_cloud: "C2"
+    source_subnet: "1.1.1.0/24"
+    destination_cloud: "C1"
+MISC:
+  - LOG_ENABLE: true
+  - GUI: true

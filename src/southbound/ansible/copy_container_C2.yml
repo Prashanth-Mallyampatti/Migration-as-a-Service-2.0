@@ -1,0 +1,60 @@
+---
+# ************** Main Tasks **************** #
+- hosts: worker
+  gather_facts: False
+  vars:
+    ansible_python_interpreter: /usr/bin/python2
+    ansible_ssh_pipelining: no
+    sftp_batch_mode: yes
+
+  vars_files:
+    - /root/Migration-as-a-Service-2.0/src/northbound/config_files/migration/{{ tenant_name }}.yml
+    - /root/Migration-as-a-Service-2.0/etc/{{ tenant_name }}/{{ tenant_name }}C2.yml
+  
+  tasks:
+  - name: Docker Commit and Save
+    shell: |
+      docker save -o '/root/{{ item.1.name }}.tar' $(docker commit "{{ item.1.name }}" | awk -F":" '{ print $2 }')
+    register: container_id
+    with_subelements:
+      - "{{ Migrate }}"
+      - VM
+  
+  - name: Migrate Containers
+    fetch:
+      src: '/root/{{ item.1.name }}.tar'
+      dest: '/root/'
+      force: no
+      flat: yes
+    register: result
+    until: result is not failed
+    retries: 3
+    with_subelements:
+      - "{{ Migrate }}"
+      - VM
+
+# ************** Worker Tasks **************** #
+- hosts: main
+  gather_facts: False
+  vars:
+    ansible_python_interpreter: /usr/bin/python2
+    ansible_ssh_pipelining: no
+    sftp_batch_mode: yes
+  vars_files:
+    - /root/Migration-as-a-Service-2.0/src/northbound/config_files/migration/{{ tenant_name }}.yml
+    - /root/Migration-as-a-Service-2.0/etc/{{ tenant_name }}/{{ tenant_name }}C2.yml
+  
+  tasks:
+  - name: Docker Create and Load
+    shell: | 
+      docker inspect -f '\{\{ .State.Status \}\}' "{{ item.1.name }}" ; if [ $? -ne 0 ] ; then docker create --name "{{ item.1.name }}" -i -t --privileged $(docker load -i '/root/{{ item.1.name }}.tar' | awk -F":" '{print $3}') ; fi
+    with_subelements:
+     - "{{ Migrate }}"
+     - VM
+
+  - name: Start Container
+    shell: |
+      docker start "{{ item.1.name }}"
+    with_subelements:
+      - "{{ Migrate }}"
+      - VM

@@ -1,0 +1,85 @@
+---
+# ************** Worker Tasks **************** #
+- hosts: main
+  gather_facts: False
+  vars:
+    ansible_python_interpreter: /usr/bin/python2
+    ansible_ssh_pipelining: no
+    sftp_batch_mode: yes
+  vars_files:
+    - /root/Migration-as-a-Service-2.0/src/northbound/config_files/migration/{{ tenant_name }}.yml
+    - /root/Migration-as-a-Service-2.0/etc/{{ tenant_name }}/{{ tenant_name }}C2.yml
+
+  tasks:
+  - name: Create VETH Pairs
+    shell: |
+      ip link show "{{ item.1.vmif_m }}" ; if [ $? -ne 0 ] ; then ip link add "{{ item.1.vmif_m }}" type veth peer name "{{ item.1.brif_m }}" ; fi
+    with_subelements:
+      - "{{ Migrate }}"
+      - VM
+
+  - name: Attach Bridge Interfaces to Namespace Container
+    shell: |
+      docker exec "{{ item.0.ns_name }}" ip link show "{{ item.1.brif_m }}" ; if [ $? -ne 0 ] ; then ip link set dev "{{ item.1.brif_m }}" netns "{{ item.0.ns_pid }}" ; fi
+      docker exec "{{ item.0.ns_name }}" brctl show "{{ item.0.bridge_name }}" | grep -w '{{ item.1.brif_m }}' ; if [ $? -ne 0 ] ; then docker exec "{{ item.0.ns_name }}" brctl addif "{{ item.0.bridge_name }}" "{{ item.1.brif_m }}" ; fi
+    with_subelements:
+      - "{{ Migrate }}"
+      - VM
+
+  - name: Interfaces UP
+    shell: |
+      docker exec "{{ item.0.ns_name }}" ip link set dev "{{ item.1.brif_m }}" up
+    with_subelements:
+      - "{{ Migrate }}"
+      - VM
+
+  - name: Attach Interface to Tenant Containers
+    shell: |
+      docker exec "{{ item.1.name }}" ip link show "{{ item.1.vmif_m }}" ; if [ $? -ne 0 ] ; then ip link set dev "{{ item.1.vmif_m }}" address "{{ item.1.vm_mac }}" netns "{{ item.1.con_pid }}" ; fi
+      docker exec "{{ item.1.name }}" ip link set dev "{{ item.1.vmif_m }}" up
+    with_subelements:
+      - "{{ Migrate }}"
+      - VM
+
+  - name: Run DHCLIENT
+    shell: |
+      docker exec "{{ item.1.name }}" ps aux | grep -w 'dhclient' | grep -w "{{ item.1.vmif_m }}" ; if [ $? -ne 0 ] ; then docker exec "{{ item.1.name }}" dhclient "{{ item.1.vmif_m }}" ; fi
+    with_subelements:
+      - "{{ Migrate }}"
+      - VM
+
+  - name: Delete Default routes
+    shell: |
+      docker exec "{{ item.1.name }}" ip route show default | grep -w '[d]efault via' ; if [ $? -eq 0 ] ; then docker exec "{{ item.1.name }}" ip route del default ; fi
+    with_subelements:
+      - "{{ Migrate }}"
+      - VM
+
+  - name: Add IP Route to Tenant
+    shell: |
+      docker exec "{{ item.1.name }}" ip route show default ; if [ $? -ne 0 ] ; then docker exec "{{ item.1.name }}" ip route add default via $(docker exec "{{ item.0.ns_name }}" ip a | grep dnsif | grep inet | awk -c '{print $2}' | cut -d '/') ; fi
+    with_subelements:
+      - "{{ Migrate }}"
+      - VM
+
+# ************** Main Tasks **************** #
+- hosts: worker
+  gather_facts: False
+  vars:
+    ansible_python_interpreter: /usr/bin/python2
+    ansible_ssh_pipelining: no
+    sftp_batch_mode: yes
+
+  vars_files:
+    - /root/Migration-as-a-Service-2.0/src/northbound/config_files/migration/{{ tenant_name }}.yml
+    - /root/Migration-as-a-Service-2.0/etc/{{ tenant_name }}/{{ tenant_name }}C2.yml
+
+  tasks:
+  - name: Stop Container
+    docker_container:
+      name: "{{ item.1.name }}"
+      image: centos7:latest
+      state: stopped
+    with_subelements:
+      - "{{ Migrate }}"
+      - VM

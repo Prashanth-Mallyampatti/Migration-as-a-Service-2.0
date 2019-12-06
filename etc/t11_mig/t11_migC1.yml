@@ -1,0 +1,11 @@
+Migrate:
+- VM:
+  - brif_m: t11br1if1_m
+    con_pid: '17237'
+    name: t11_c1
+    vm_mac: ''
+    vmif: t11c1if1
+    vmif_m: t11c1if1_m
+  bridge_name: t11br1
+  ns_name: t11ns1
+  ns_pid: '14081'
