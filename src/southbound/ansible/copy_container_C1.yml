@@ -73,7 +73,19 @@
     with_subelements:
       - "{{ Migrate }}"
       - VM
-
-  - name: Attach the container
+  
+  - name: Create VETH Pairs
     shell: |
-    
+      ip link add "{{ item.1.brif_m }}" type veth peer name "{{ item.1.vmif_m }}"
+    ignore_errors: yes
+    with_subelements:
+      - "{{ Migrate }}"
+      - VM
+  
+  
+#  - name: Attach Interfaces
+#    shell: |
+#      ip link set dev "{{  }}" netns "{{ item.1.pid }}"
+#    with_subelements:
+#      - "{{ Migrate }}"
+#      - VM

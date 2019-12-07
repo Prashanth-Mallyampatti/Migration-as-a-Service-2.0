@@ -221,3 +221,19 @@ INFO:root: 03:18:10.528757 file 't1_mig.yml' created in '/root/Migration-as-a-Se
 INFO:root: 03:18:10.533786 Created t1_mig directory for tenant t1_mig.yml
 INFO:root: 03:18:11.059551 SUCCESSFULLY migrated for tenant t1_mig
 INFO:root: 03:18:11.060247 file 't1_mig.yml' modified in '/root/Migration-as-a-Service-2.0/src/northbound/config_files/migration'
+INFO:root: 04:25:13.482539 file 't2.yml' created in '/root/Migration-as-a-Service-2.0/src/northbound/config_files/infrastructure'
+INFO:root: 04:27:56.279290 SUCCESSFULLY completed creating the required infrastructure for tenant t2
+INFO:root: 04:27:56.280471 file 't2.yml' modified in '/root/Migration-as-a-Service-2.0/src/northbound/config_files/infrastructure'
+INFO:root: 04:32:41.472726 file 't2_mig.yml' modified in '/root/Migration-as-a-Service-2.0/src/northbound/config_files/migration'
+INFO:root: 04:32:41.473127 file 't2_mig.yml' modified in '/root/Migration-as-a-Service-2.0/src/northbound/config_files/migration'
+INFO:root: 04:34:17.411569 file 't2_mig.yml' created in '/root/Migration-as-a-Service-2.0/src/northbound/config_files/migration'
+INFO:root: 04:34:17.415802 Created t2_mig directory for tenant t2_mig.yml
+ERROR:root: 04:34:19.635423 FAILED to migrate for tenant t2_mig
+INFO:root: 04:34:19.635870 SUCCESSFULLY migrated for tenant t2_mig
+INFO:root: 04:34:19.636192 file 't2_mig.yml' modified in '/root/Migration-as-a-Service-2.0/src/northbound/config_files/migration'
+INFO:root: 04:35:30.721686 file 't2_mig.yml' created in '/root/Migration-as-a-Service-2.0/src/northbound/config_files/migration'
+INFO:root: 04:35:38.232452 file 't2_mig.yml' created in '/root/Migration-as-a-Service-2.0/src/northbound/config_files/migration'
+INFO:root: 04:35:55.491793 file 't2_mig.yml' deleted in '/root/Migration-as-a-Service-2.0/src/northbound/config_files/migration'
+INFO:root: 04:36:00.065214 file 't2_mig.yml' created in '/root/Migration-as-a-Service-2.0/src/northbound/config_files/migration'
+INFO:root: 04:36:57.385882 SUCCESSFULLY migrated for tenant t2_mig
+INFO:root: 04:36:57.386979 file 't2_mig.yml' modified in '/root/Migration-as-a-Service-2.0/src/northbound/config_files/migration'

@@ -414,3 +414,29 @@ PLAY RECAP *********************************************************************
 99.99.99.2                 : ok=7    changed=6    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 localhost                  : ok=7    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 
+Using /etc/ansible/ansible.cfg as config file
+Using /etc/ansible/ansible.cfg as config file
+
+PLAY [main] *************************************************************************************************************************************************
+
+TASK [Stop container] ***************************************************************************************************************************************
+changed: [localhost] => (item=[{u'ns_name': u't2ns1', u'bridge_name': u't2br1'}, {u'name': u't2_c1', u'brif_m': u't2br1if1_m', u'vmif_m': u't2c1if1_m', u'pid': u'1442', u'vmif': u't2c1if1', u'vm_mac': u'7e:65:70:ba:94:19'}]) => {"ansible_loop_var": "item", "changed": true, "cmd": "docker stop \"t2_c1\"\n", "delta": "0:00:10.573146", "end": "2019-12-07 04:36:13.549243", "item": [{"bridge_name": "t2br1", "ns_name": "t2ns1"}, {"brif_m": "t2br1if1_m", "name": "t2_c1", "pid": "1442", "vm_mac": "7e:65:70:ba:94:19", "vmif": "t2c1if1", "vmif_m": "t2c1if1_m"}], "rc": 0, "start": "2019-12-07 04:36:02.976097", "stderr": "", "stderr_lines": [], "stdout": "t2_c1", "stdout_lines": ["t2_c1"]}
+
+TASK [Docker Commit] ****************************************************************************************************************************************
+changed: [localhost] => (item=[{u'ns_name': u't2ns1', u'bridge_name': u't2br1'}, {u'name': u't2_c1', u'brif_m': u't2br1if1_m', u'vmif_m': u't2c1if1_m', u'pid': u'1442', u'vmif': u't2c1if1', u'vm_mac': u'7e:65:70:ba:94:19'}]) => {"ansible_loop_var": "item", "changed": true, "cmd": "docker save -o \"t2_c1\".tar $(docker commit \"t2_c1\" | awk -F\":\" '{ print $2 }')\n", "delta": "0:00:05.731575", "end": "2019-12-07 04:36:19.569640", "item": [{"bridge_name": "t2br1", "ns_name": "t2ns1"}, {"brif_m": "t2br1if1_m", "name": "t2_c1", "pid": "1442", "vm_mac": "7e:65:70:ba:94:19", "vmif": "t2c1if1", "vmif_m": "t2c1if1_m"}], "rc": 0, "start": "2019-12-07 04:36:13.838065", "stderr": "", "stderr_lines": [], "stdout": "", "stdout_lines": []}
+
+TASK [Ship image] *******************************************************************************************************************************************
+changed: [localhost] => (item=[{u'ns_name': u't2ns1', u'bridge_name': u't2br1'}, {u'name': u't2_c1', u'brif_m': u't2br1if1_m', u'vmif_m': u't2c1if1_m', u'pid': u'1442', u'vmif': u't2c1if1', u'vm_mac': u'7e:65:70:ba:94:19'}]) => {"ansible_loop_var": "item", "changed": true, "cmd": "scp \"t2_c1\".tar root@99.99.99.2:/root\n", "delta": "0:00:33.810511", "end": "2019-12-07 04:36:53.616200", "item": [{"bridge_name": "t2br1", "ns_name": "t2ns1"}, {"brif_m": "t2br1if1_m", "name": "t2_c1", "pid": "1442", "vm_mac": "7e:65:70:ba:94:19", "vmif": "t2c1if1", "vmif_m": "t2c1if1_m"}], "rc": 0, "start": "2019-12-07 04:36:19.805689", "stderr": "", "stderr_lines": [], "stdout": "", "stdout_lines": []}
+
+PLAY [worker] ***********************************************************************************************************************************************
+
+TASK [Docker Load] ******************************************************************************************************************************************
+changed: [99.99.99.2] => (item=[{u'ns_name': u't2ns1', u'bridge_name': u't2br1'}, {u'name': u't2_c1', u'brif_m': u't2br1if1_m', u'vmif_m': u't2c1if1_m', u'pid': u'1442', u'vmif': u't2c1if1', u'vm_mac': u'7e:65:70:ba:94:19'}]) => {"ansible_loop_var": "item", "changed": true, "cmd": "docker create --name \"t2_c1\" -i -t --privileged --mac-address \"7e:65:70:ba:94:19\" $(docker load -i \"t2_c1\".tar | awk -F\":\" '{print $3}')\n", "delta": "0:00:01.522458", "end": "2019-12-07 04:36:56.347201", "item": [{"bridge_name": "t2br1", "ns_name": "t2ns1"}, {"brif_m": "t2br1if1_m", "name": "t2_c1", "pid": "1442", "vm_mac": "7e:65:70:ba:94:19", "vmif": "t2c1if1", "vmif_m": "t2c1if1_m"}], "rc": 0, "start": "2019-12-07 04:36:54.824743", "stderr": "", "stderr_lines": [], "stdout": "078e78d521c06a08cb12faa082f7b807bf8579ee4f100e4615b3ad6394263360", "stdout_lines": ["078e78d521c06a08cb12faa082f7b807bf8579ee4f100e4615b3ad6394263360"]}
+
+TASK [Start Container] **************************************************************************************************************************************
+changed: [99.99.99.2] => (item=[{u'ns_name': u't2ns1', u'bridge_name': u't2br1'}, {u'name': u't2_c1', u'brif_m': u't2br1if1_m', u'vmif_m': u't2c1if1_m', u'pid': u'1442', u'vmif': u't2c1if1', u'vm_mac': u'7e:65:70:ba:94:19'}]) => {"ansible_loop_var": "item", "changed": true, "cmd": "docker start \"t2_c1\"\n", "delta": "0:00:00.539253", "end": "2019-12-07 04:36:57.234623", "item": [{"bridge_name": "t2br1", "ns_name": "t2ns1"}, {"brif_m": "t2br1if1_m", "name": "t2_c1", "pid": "1442", "vm_mac": "7e:65:70:ba:94:19", "vmif": "t2c1if1", "vmif_m": "t2c1if1_m"}], "rc": 0, "start": "2019-12-07 04:36:56.695370", "stderr": "", "stderr_lines": [], "stdout": "t2_c1", "stdout_lines": ["t2_c1"]}
+
+PLAY RECAP **************************************************************************************************************************************************
+99.99.99.2                 : ok=2    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+localhost                  : ok=3    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
