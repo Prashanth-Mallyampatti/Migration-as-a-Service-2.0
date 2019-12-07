@@ -1,0 +1,67 @@
+Namespace:
+- default_route_ip: 192.168.2.1
+  name: t12
+  pid: '6391'
+  pns_if: t12pns_if
+  pns_ip: 192.168.2.1/24
+  tenant_if: t12if
+  tenant_ip: 192.168.2.2/24
+Subnet:
+- bridge_name: t12br1
+  default_route_ip: 10.1.11.1
+  dns: &id001
+  - brif: t12s1_dnsbrif
+    dhcp_end: 1.1.1.254
+    dhcp_start: 1.1.1.5
+    dnsif: t12s1_dnsif
+    dnsif_ip: 1.1.1.1/24
+    net_mask: 255.255.255.0
+  ns_name: t12ns1
+  pid: '6756'
+  route: &id002
+  - if: p1
+    ip: 10.1.11.1/24
+    ns_if: t12if
+    ns_name: t12
+  subnet_ip: 1.1.1.0/24
+  tenant_ns: &id003
+  - tenant_ns_if: t12ns1if
+    tenant_ns_ip: 10.1.11.1/24
+    tenant_ns_name: t12
+    tenant_ns_pid: '6391'
+    tenant_sub_if: t12s1if
+    tenant_sub_ip: 10.1.11.2/24
+  vms: &id004
+  - brif: t12br1if1
+    name: t12_c1
+    vm_pid: '5037'
+    vmif: t12c1if1
+  - brif: t12br1if2
+    name: t12_c2
+    vm_pid: '5551'
+    vmif: t12c2if1
+  vxlan: &id005
+  - dev: t12s1if
+    dsport: 4789
+    id: 42
+    local_ip: 10.1.11.2
+    remote_ip: 10.2.11.2
+    remote_route: 10.2.11.0/24
+    subnet_route: 10.1.11.0/24
+    tenant_route_ip: 192.168.2.2
+    v_name: vxlan_t12s1
+bridge_name: t12br1
+default_route_ip: 10.1.11.1
+dns: *id001
+name: t12
+ns_name: t12ns1
+pid: '6756'
+pns_if: t12pns_if
+pns_ip: 192.168.2.1/24
+route: *id002
+subnet_ip: 1.1.1.0/24
+tenant_if: t12if
+tenant_ip: 192.168.2.2/24
+tenant_ns: *id003
+vms: *id004
+vxlan: *id005
