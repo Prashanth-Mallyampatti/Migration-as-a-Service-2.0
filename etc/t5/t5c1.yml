@@ -34,11 +34,11 @@ Subnet:
   vms: &id004
   - brif: t5br1if1
     name: t5_C1
-    vm_pid: ''
+    vm_pid: '8274'
     vmif: t5C1if1
   - brif: t5br1if2
     name: t5_C2
-    vm_pid: ''
+    vm_pid: '8877'
     vmif: t5C2if1
   vxlan: &id005
   - dev: t5s1if

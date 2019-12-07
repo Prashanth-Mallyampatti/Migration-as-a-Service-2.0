@@ -3,6 +3,7 @@
   gather_facts: False
   vars:
     ansible_python_interpreter: /usr/bin/python2
+    disk_dir: /var/lib/libvirt/images
   vars_files:
     - /root/Migration-as-a-Service-2.0/src/northbound/config_files/infrastructure/{{ tenant_name }}.yml
     - /root/Migration-as-a-Service-2.0/etc/{{ tenant_name }}/{{ tenant_name }}c2.yml
@@ -12,7 +13,7 @@
     docker_image:
       name: centos7
       build:
-        path: /root/
+        path: ./
       state: present
       source: build
 
@@ -24,19 +25,15 @@
       privileged: yes
       interactive: yes
       tty: yes
-    with_subelements:
+    with_items:
       - "{{ Subnet }}"
       - vms
-# ************************* Master tasks *********************** #
-- hosts: main
-  gather_facts: False
-  vars:
-    ansible_python_interpreter: /usr/bin/python2
-  vars_files:
-    - /root/Migration-as-a-Service-2.0/src/northbound/config_files/infrastructure/{{ tenant_name }}.yml
-    - /root/Migration-as-a-Service-2.0/etc/{{ tenant_name }}/{{ tenant_name }}c1.yml
+  - name: Run the Population script
+    shell: |
+      python3 /root/Migration-as-a-Service-2.0/src/logiclayer/parser_scripts/populate_container_pid.py "{{ tenant_name }}" "{{ tenant_name }}"c1.yml
 
-  tasks:
+  - pause:
+      seconds: 5
   - name: Run the Population script
     shell: |
       python3 /root/Migration-as-a-Service-2.0/src/logiclayer/parser_scripts/populate_container_pid.py "{{ tenant_name }}" "{{ tenant_name }}"c2.yml
@@ -44,16 +41,6 @@
   - pause:
       seconds: 5
 
-# ************************ Worker tasks *********************** #
-- hosts: worker
-  gather_facts: False
-  vars:
-    ansible_python_interpreter: /usr/bin/python2
-  vars_files:
-    - /root/Migration-as-a-Service-2.0/src/northbound/config_files/infrastructure/{{ tenant_name }}.yml
-    - /root/Migration-as-a-Service-2.0/etc/{{ tenant_name }}/{{ tenant_name }}c2.yml
-
-  tasks:
   - name: Attach Container interface
     shell: |
       docker exec "{{ item.1.name }}" ip link show "{{ item.1.vmif }}" ; if [ $? -ne 0 ] ; then ip link set "{{ item.1.vmif }}" netns "{{ item.1.vm_pid }}" ; fi
@@ -80,7 +67,7 @@
 
   - name: Run DHCLIENT
     shell: |
-      docker exec "{{ item.1.name }}" ps aux | grep -w 'dhclient' | grep -w "{{ item.1.vmif }}" ; if [ $? -ne 0 ] ; then  docker exec "{{ item.1.name }}" dhclient "{{ item.1.vmif }}" ; fi
+      docker exec "{{ item.1.name }}" dhclient "{{ item.1.vmif }}"
     when:
       - item.1.brif != []
       - item.1.name != "JOKER"

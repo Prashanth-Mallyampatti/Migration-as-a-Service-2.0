@@ -30,6 +30,13 @@
       - "{{ Subnet }}"
       - vms
 
+  - name: Run the Population script
+    shell: |
+      python3 /root/Migration-as-a-Service-2.0/src/logiclayer/parser_scripts/populate_container_pid.py "{{ tenant_name }}" "{{ tenant_name }}"c1.yml
+  
+  - pause:
+      seconds: 5
+
   - name: Attach Container interface
     shell: |
       docker exec "{{ item.1.name }}" ip link show "{{ item.1.vmif }}" ; if [ $? -ne 0 ] ; then ip link set "{{ item.1.vmif }}" netns "{{ item.1.vm_pid }}" ; fi
@@ -56,7 +63,7 @@
 
   - name: Run DHCLIENT
     shell: |
-      docker exec "{{ item.1.name }}" dhclient "{{ item.1.vmif }}"
+      docker exec "{{ item.1.name }}" ps aux | grep -w 'dhclient' | grep -w "{{ item.1.vmif }}" ; if [ $? -ne 0 ] ; then  docker exec "{{ item.1.name }}" dhclient "{{ item.1.vmif }}" ; fi
     when: 
       - item.1.brif != []
       - item.1.name != "JOKER"

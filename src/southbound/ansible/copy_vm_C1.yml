@@ -14,4 +14,5 @@
   tasks:
   docker_container:
     name: t5_C1
-    
+    image: centos7
+    state: stopped    
