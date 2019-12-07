@@ -1,6 +1,7 @@
 Namespace:
 - default_route_ip: 192.168.131.1
   name: t3
+  pid: '21000'
   pns_if: t3pns_if
   pns_ip: 192.168.131.1/24
   tenant_if: t3if
@@ -16,6 +17,7 @@ Subnet:
     dnsif_ip: 1.1.1.1/24
     net_mask: 255.255.255.0
   ns_name: t3ns1
+  pid: '22985'
   route:
   - if: p1
     ip: 10.2.21.1/24
@@ -26,11 +28,13 @@ Subnet:
   - tenant_ns_if: t3ns1if
     tenant_ns_ip: 10.2.21.1/24
     tenant_ns_name: t3
+    tenant_ns_pid: '21000'
     tenant_sub_if: t3s1if
     tenant_sub_ip: 10.2.21.2/24
   vms:
   - brif: t3br1if1
     name: t3_C3
+    vm_pid: ''
     vmif: t3C3if1
   vxlan:
   - dev: t3s1if
@@ -44,7 +48,7 @@ Subnet:
     v_name: vxlan_t3s1
 - bridge_name: t3br2
   default_route_ip: 10.2.22.1
-  dns:
+  dns: &id001
   - brif: t3s2_dnsbrif
     dhcp_end: 2.2.2.254
     dhcp_start: 2.2.2.5
@@ -52,23 +56,26 @@ Subnet:
     dnsif_ip: 2.2.2.1/24
     net_mask: 255.255.255.0
   ns_name: t3ns2
-  route:
+  pid: '24775'
+  route: &id002
   - if: p1
     ip: 10.2.22.1/24
     ns_if: t3if
     ns_name: t3
   subnet_ip: 2.2.2.0/24
-  tenant_ns:
+  tenant_ns: &id003
   - tenant_ns_if: t3ns2if
     tenant_ns_ip: 10.2.22.1/24
     tenant_ns_name: t3
+    tenant_ns_pid: '21000'
     tenant_sub_if: t3s2if
     tenant_sub_ip: 10.2.22.2/24
-  vms:
+  vms: &id004
   - brif: t3br2if1
     name: t3_C4
+    vm_pid: ''
     vmif: t3C4if1
-  vxlan:
+  vxlan: &id005
   - dev: []
     dsport: []
     id: []
@@ -78,3 +85,18 @@ Subnet:
     subnet_route: []
     tenant_route_ip: []
     v_name: []
+bridge_name: t3br2
+default_route_ip: 10.2.22.1
+dns: *id001
+name: t3
+ns_name: t3ns2
+pid: '24775'
+pns_if: t3pns_if
+pns_ip: 192.168.131.1/24
+route: *id002
+subnet_ip: 2.2.2.0/24
+tenant_if: t3if
+tenant_ip: 192.168.131.2/24
+tenant_ns: *id003
+vms: *id004
+vxlan: *id005

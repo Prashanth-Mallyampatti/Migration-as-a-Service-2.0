@@ -1,6 +1,7 @@
 Namespace:
 - default_route_ip: 192.168.133.1
   name: t5
+  pid: '30798'
   pns_if: t5pns_if
   pns_ip: 192.168.133.1/24
   tenant_if: t5if
@@ -16,6 +17,7 @@ Subnet:
     dnsif_ip: 1.1.1.1/24
     net_mask: 255.255.255.0
   ns_name: t5ns1
+  pid: '2687'
   route:
   - if: p1
     ip: 10.2.41.1/24
@@ -26,11 +28,13 @@ Subnet:
   - tenant_ns_if: t5ns1if
     tenant_ns_ip: 10.2.41.1/24
     tenant_ns_name: t5
+    tenant_ns_pid: '30798'
     tenant_sub_if: t5s1if
     tenant_sub_ip: 10.2.41.2/24
   vms:
   - brif: t5br1if1
     name: t5_C3
+    vm_pid: ''
     vmif: t5C3if1
   vxlan:
   - dev: t5s1if
@@ -44,7 +48,7 @@ Subnet:
     v_name: vxlan_t5s1
 - bridge_name: t5br2
   default_route_ip: 10.2.42.1
-  dns:
+  dns: &id001
   - brif: t5s2_dnsbrif
     dhcp_end: 2.2.2.254
     dhcp_start: 2.2.2.5
@@ -52,23 +56,26 @@ Subnet:
     dnsif_ip: 2.2.2.1/24
     net_mask: 255.255.255.0
   ns_name: t5ns2
-  route:
+  pid: '6794'
+  route: &id002
   - if: p1
     ip: 10.2.42.1/24
     ns_if: t5if
     ns_name: t5
   subnet_ip: 2.2.2.0/24
-  tenant_ns:
+  tenant_ns: &id003
   - tenant_ns_if: t5ns2if
     tenant_ns_ip: 10.2.42.1/24
     tenant_ns_name: t5
+    tenant_ns_pid: '30798'
     tenant_sub_if: t5s2if
     tenant_sub_ip: 10.2.42.2/24
-  vms:
+  vms: &id004
   - brif: t5br2if1
     name: t5_C4
+    vm_pid: ''
     vmif: t5C4if1
-  vxlan:
+  vxlan: &id005
   - dev: []
     dsport: []
     id: []
@@ -78,3 +85,18 @@ Subnet:
     subnet_route: []
     tenant_route_ip: []
     v_name: []
+bridge_name: t5br2
+default_route_ip: 10.2.42.1
+dns: *id001
+name: t5
+ns_name: t5ns2
+pid: '6794'
+pns_if: t5pns_if
+pns_ip: 192.168.133.1/24
+route: *id002
+subnet_ip: 2.2.2.0/24
+tenant_if: t5if
+tenant_ip: 192.168.133.2/24
+tenant_ns: *id003
+vms: *id004
+vxlan: *id005
