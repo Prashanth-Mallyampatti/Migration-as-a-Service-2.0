@@ -1,0 +1,10 @@
+Migrate:
+- VM:
+  - brif_m: t2br1if1_m
+    name: t2_c1
+    pid: '1442'
+    vm_mac: 7e:65:70:ba:94:19
+    vmif: t2c1if1
+    vmif_m: t2c1if1_m
+  bridge_name: t2br1
+  ns_name: t2ns1
