@@ -1,0 +1,5 @@
+Migrate:
+- VM:
+  - name: t4_c1
+  bridge_name: t4br1
+  ns_name: t4ns1

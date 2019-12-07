@@ -83,7 +83,7 @@ class Create_YAML_FILE():
       self.subnets.append(subnet_val)
 
       mask_num = subnet_addr.split("/")
-      if subnet_addr_and_vm["CONTAINER"][0]["name"] != []:
+      if subnet_addr_and_vm["VM"][0]["name"] != []:
         dns_list["brif"] = tenant_name + "s" + str(br_counter) + "_dnsbrif"
         dns_list["dnsif"] = tenant_name + "s" + str(br_counter) + "_dnsif"
         dns_list["dnsif_ip"] = ip_range[1] + "/" + mask_num[1]
@@ -194,7 +194,7 @@ class Create_YAML_FILE():
   def parseCONTAINERs(self):
     all_vm_lists = []
     for br_count, subnet_addr_and_vm in enumerate(self.contents, 1):
-      vms = subnet_addr_and_vm["CONTAINER"]
+      vms = subnet_addr_and_vm["VM"]
       vm_lists = []
       for vm_count, vm in enumerate(vms, 1):
         if vm["name"] != []:

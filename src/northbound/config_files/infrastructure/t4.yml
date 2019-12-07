@@ -1,15 +1,15 @@
 ---
 C1:
-- CONTAINER:
-  - name: C1
-  - name: C2
+- VM:
+  - name: c1
+  - name: c2
   subnet_addr: 1.1.1.0/24
 C2:
-- CONTAINER:
-  - name: C3
+- VM:
+  - name: c3
   subnet_addr: 1.1.1.0/24
-- CONTAINER:
-  - name: C4
+- VM:
+  - name: c4
   subnet_addr: 2.2.2.0/24
 MISC:
 - LOG_ENABLE: true

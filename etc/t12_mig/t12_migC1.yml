@@ -1,0 +1,9 @@
+Migrate:
+- VM:
+  - brif_m: t12br1if1_m
+    name: t12_c1
+    vm_mac: 72:76:8e:c3:bc:7e
+    vmif: t12c1if1
+    vmif_m: t12c1if1_m
+  bridge_name: t12br1
+  ns_name: t12ns1

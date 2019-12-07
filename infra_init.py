@@ -37,6 +37,13 @@ notifier_infra.add_watch('/root/Migration-as-a-Service-2.0/src/northbound/config
 # Error checking flag
 continue_flag = True
 
+file_exists=os.path.exists("/root/Migration-as-a-Service-2.0/etc/migrating.txt")
+if not file_exists:
+  os.system("touch /root/Migration-as-a-Service-2.0/etc/migrating.txt")
+f = open("/root/Migration-as-a-Service-2.0/etc/migrating.txt", "w")
+f.write("0")
+f.close()
+
 # Event handling
 for event in notifier_infra.event_gen():
     if event is not None:
@@ -156,6 +163,14 @@ for event in notifier_infra.event_gen():
                   if log_enable:
                      logging.error(' ' + str(datetime.datetime.now().time()) + ' ' + 'FAILED to create infrastructure for tenant ' + str(dir_name[0]))
 
+             # Create VMs in cloud 1
+             if continue_flag:
+                exit_status = os.system("ansible-playbook " + str(MIG_ANSIBLE) + "create_interfaces_C1.yml -i " + str(MIG_ANSIBLE) + "inventory --extra-vars 'tenant_name=" + str(dir_name[0]) + "' -v >> " + str(MIG_INFRA_LOG))
+                if exit_status != 0:
+                  continue_flag = False
+                  if log_enable:
+                     logging.error(' ' + str(datetime.datetime.now().time()) + ' ' + 'FAILED to create infrastructure for tenant ' + str(dir_name[0]))
+
              # Create VMs in cloud 2
              if continue_flag:
                 exit_status = os.system("ansible-playbook " + str(MIG_ANSIBLE) + "create_tenant_containers_C2.yml -i " +  str(MIG_ANSIBLE) + "inventory --extra-vars 'tenant_name=" + str(dir_name[0]) + "' -v >> " + str(MIG_INFRA_LOG))
@@ -163,6 +178,14 @@ for event in notifier_infra.event_gen():
                   continue_flag = False
                   if log_enable:
                       logging.error(' ' + str(datetime.datetime.now().time()) + ' ' + 'FAILED to create infrastructure for tenant ' + str(dir_name[0]))
+
+             # Create VMs in cloud 1
+             if continue_flag:
+                exit_status = os.system("ansible-playbook " + str(MIG_ANSIBLE) + "create_interfaces_C2.yml -i " + str(MIG_ANSIBLE) + "inventory --extra-vars 'tenant_name=" + str(dir_name[0]) + "' -v >> " + str(MIG_INFRA_LOG))
+                if exit_status != 0:
+                  continue_flag = False
+                  if log_enable:
+                     logging.error(' ' + str(datetime.datetime.now().time()) + ' ' + 'FAILED to create infrastructure for tenant ' + str(dir_name[0]))
 
              if continue_flag:
                 if log_enable:

@@ -1,78 +1,74 @@
 ---
+# ************** Main Tasks **************** #
+- hosts: main
+  gather_facts: False
+  vars:
+    ansible_python_interpreter: /usr/bin/python2
+    ansible_ssh_pipelining: no
+    sftp_batch_mode: yes
+
+  vars_files:
+    - /root/Migration-as-a-Service-2.0/src/northbound/config_files/migration/{{ tenant_name }}.yml
+    - /root/Migration-as-a-Service-2.0/etc/{{ tenant_name }}/{{ tenant_name }}C1.yml
+  
+  tasks:
+  - name: Stop container
+    shell: |
+      docker stop "{{ item.1.name }}"
+    with_subelements:
+      - "{{ Migrate }}"
+      - VM
+  
+  - name: Docker Commit
+    shell: |
+      docker save -o "{{ item.1.name }}".tar $(docker commit "{{ item.1.name }}" | awk -F":" '{ print $2 }')
+    register: container_id
+    with_subelements:
+      - "{{ Migrate }}"
+      - VM
+
+#  - name: Docker Save
+#    command: docker save -o "{{ item.1.name }}".tar "{{ container_id.stdout }}"
+#    with_subelements:
+#      - "{{ Migrate }}"
+#      - VM
+
+  - name: Ship image
+    shell: |
+      scp "{{ item.1.name }}".tar root@99.99.99.2:/root
+    with_subelements:
+      - "{{ Migrate }}"
+      - VM
+
+
 - hosts: worker
   gather_facts: False
   vars:
     ansible_python_interpreter: /usr/bin/python2
-    disk_dir: /var/lib/libvirt/images
+    ansible_ssh_pipelining: no
+    sftp_batch_mode: yes
   vars_files:
-    - /root/Migration-as-a-Service-2.0/src/northbound/config_files/infrastructure/{{ tenant_name }}.yml
-    - /root/Migration-as-a-Service-2.0/etc/{{ tenant_name }}/{{ tenant_name }}c2.yml
-
+    - /root/Migration-as-a-Service-2.0/src/northbound/config_files/migration/{{ tenant_name }}.yml
+    - /root/Migration-as-a-Service-2.0/etc/{{ tenant_name }}/{{ tenant_name }}C1.yml
+  
   tasks:
-  - name: Build Docker Image
-    docker_image:
-      name: centos7
-      build:
-        path: ./
-      state: present
-      source: build
-
-  - name: Spawning Tenant Container
-    docker_container:
-      name: "{{ item.1.name }}"
-      image: centos7:latest
-      hostname: test
-      privileged: yes
-      interactive: yes
-      tty: yes
-    with_items:
-      - "{{ Subnet }}"
-      - vms
-  - name: Run the Population script
-    shell: |
-      python3 /root/Migration-as-a-Service-2.0/src/logiclayer/parser_scripts/populate_container_pid.py "{{ tenant_name }}" "{{ tenant_name }}"c1.yml
-
-  - pause:
-      seconds: 5
-  - name: Run the Population script
-    shell: |
-      python3 /root/Migration-as-a-Service-2.0/src/logiclayer/parser_scripts/populate_container_pid.py "{{ tenant_name }}" "{{ tenant_name }}"c2.yml
-
-  - pause:
-      seconds: 5
-
-  - name: Attach Container interface
-    shell: |
-      docker exec "{{ item.1.name }}" ip link show "{{ item.1.vmif }}" ; if [ $? -ne 0 ] ; then ip link set "{{ item.1.vmif }}" netns "{{ item.1.vm_pid }}" ; fi
-    when:
-      - item.1.brif != []
-      - item.1.name != "JOKER"
-      - item.1.vmif != []
-      - item.1.vm_pid != []
+  - name: Docker Load
+    shell: | 
+      docker create --name "{{ item.1.name }}" -i -t --privileged --mac-address "{{ item.1.vm_mac }}" $(docker load -i "{{ item.1.name }}".tar)
     with_subelements:
-      - "{{ Subnet }}"
-      - vms
+     - "{{ Migrate }}"
+     - VM
 
-  - name: Make the container interface up
+#  - name: Docker create
+#    shell: |
+#      docker create --name "{{ item.1.name }}" -i -t --privileged --mac-address "{{ item.1.vm_mac }}" "{{ item.1.name }}"
+#    with_subelements:
+#     - "{{ Migrate }}"
+#     - VM
+#
+  - name: Start Container
     shell: |
-      docker exec "{{ item.1.name }}" ip link set dev "{{ item.1.vmif }}" up
-    when:
-      - item.1.brif != []
-      - item.1.name != "JOKER"
-      - item.1.vmif != []
-      - item.1.vm_pid != []
+      docker start "{{ item.1.name }}"
     with_subelements:
-      - "{{ Subnet }}"
-      - vms
-
-  - name: Run DHCLIENT
-    shell: |
-      docker exec "{{ item.1.name }}" dhclient "{{ item.1.vmif }}"
-    when:
-      - item.1.brif != []
-      - item.1.name != "JOKER"
-      - item.1.vmif != []
-      - item.1.vm_pid != []
-    with_subelements:
-      - "{{ Subnet }}"
-      - vms
+      - "{{ Migrate }}"
+      - VM
