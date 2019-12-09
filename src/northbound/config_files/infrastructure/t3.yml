@@ -1,0 +1,12 @@
+C1:
+  - subnet_addr: "4.4.4.0/24"
+    VM:
+      - name: "c1"
+      - name: "c2"
+  - subnet_addr: "3.3.3.0/24"
+    VM:
+      - name: "c4"
+C2:
+  - subnet_addr: "1.1.1.0/24"
+    VM:
+      - name: "c5"

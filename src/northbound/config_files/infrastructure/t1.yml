@@ -1,16 +1,28 @@
----
 C1:
-- VM:
-  - name: c1
-  - name: c2
-  subnet_addr: 1.1.1.0/24
+  - subnet_addr: "1.1.1.0/24"
+    VM:
+      - name: "VM1"
+        disk: "12"
+        mem: "6"
+        vcpu: "2"
+        internet_access: false
+      - name: "VM2"
+        disk: "4"
+        mem: "5"
+        vcpu: "1"
+        internet_access: false
+  - subnet_addr: "2.2.2.0/24"
+    VM:
+      - name: "VM3"
+        disk: "4"
+        mem: "4"
+        vcpu: "2"
+        internet_access: false
 C2:
-- VM:
-  - name: c3
-  subnet_addr: 1.1.1.0/24
-- VM:
-  - name: c4
-  subnet_addr: 2.2.2.0/24
-MISC:
-- LOG_ENABLE: true
-  GUI: true
+  - subnet_addr: "1.1.1.0/24"
+    VM:
+      - name: "VM4"
+        disk: "4"
+        mem: "6"
+        vcpu: "2"
+        internet_access: false
